@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Region extends Model
+class District extends Model
 {
     use HasFactory;
 
-    protected $table = 'regions';
+    protected $table = 'districts';
 
     protected $fillable = [
         'name',
         'type',
         'geometry',
-        'cadastr_num',
+        'cad_raqami',
+        'viloyat',
         'region_id'
     ];
 }

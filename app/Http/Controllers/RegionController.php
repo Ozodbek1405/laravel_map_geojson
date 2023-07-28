@@ -2,15 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
+use App\Models\Region;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\File;
 
 class RegionController extends Controller
 {
     public function map_view(): Factory|Application|View
     {
-        return view('welcome');
+        $regions = Region::all();
+        $districts = District::all();
+        return view('welcome',compact('regions','districts'));
+    }
+
+    public function create_view(): Factory|Application|View
+    {
+        return view('create_json');
+    }
+
+    public function create_region(): RedirectResponse
+    {
+        $json = File::get('storage/regions.json');
+        $data = json_decode($json);
+
+        foreach ($data->features as $item) {
+            Region::query()->create([
+                'name'=> $item->properties->name,
+                'type'=> $item->type,
+                'geometry'=> json_encode($item->geometry),
+                'cadastr_num'=> $item->properties->cadastr_num,
+                'region_id'=> $item->id
+            ]);
+        }
+        return redirect()->back();
+
+    }
+
+    public function create_district(): RedirectResponse
+    {
+        $json = File::get('storage/districts.json');
+        $data = json_decode($json);
+
+        foreach ($data->features as $item) {
+            District::query()->create([
+                'name'=> $item->properties->name,
+                'type'=> $item->type,
+                'geometry'=> json_encode($item->geometry),
+                'cad_raqami'=> $item->properties->cad_raqami,
+                'viloyat'=>$item->properties->viloyat,
+                'region_id'=> $item->properties->region_id
+            ]);
+        }
+        return redirect()->back();
     }
 }
