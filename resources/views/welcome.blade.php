@@ -8,27 +8,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <title>Map</title>
 </head>
 <body>
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-sm">
-            <select class="form-select">
-                <option selected>Select region name</option>
-                @foreach($regions as $region)
-                    <option value="{{$region->id}}">{{$region->id}} - {{$region->name}}</option>
-                @endforeach
-            </select>
+            <form action="" method="get">
+                <select class="form-select" name="region_id" id="select">
+                    <option selected value="">Select region name</option>
+                    @foreach($regions as $region)
+                        <option @if(!empty($_GET['region_id'])) @selected($region->id == $_GET['region_id']) @endif  value="{{$region->id}}">{{$region->name}}
+                        </option>
+                    @endforeach
+                </select>
+                <input type="submit" id="submit" style="visibility: hidden">
+            </form>
         </div>
 
         <div class="col-sm">
-            <select class="form-select">
-                <option selected>Select district name</option>
-                @foreach($districts as $district)
-                    <option value="{{$district->id}}">{{$district->region_id}} - {{$district->name}}</option>
-                @endforeach
-            </select>
+            <form action="" method="get">
+                <select class="form-select" id="district_select" name="district_id">
+                    <option selected value="">Select district name</option>
+                    @if(isset($districts))
+                        @foreach($districts as $district)
+                            <option value="{{$district->id}}">{{$district->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+                <input type="submit" id="district_submit" style="visibility: hidden">
+            </form>
         </div>
     </div>
 </div>
@@ -37,6 +48,17 @@
     <div id="map" style="width:900px; height:580px"></div>
 </div>
 
+@php
+if (!empty($_GET['region_id'])){
+    $location = $regions->where('id',$_GET['region_id'])->first();
+}
+@endphp
+
+<script>
+    $('#select').on('change', function() {
+        $('#submit').click();
+    })
+</script>
 <script>
     var map = L.map('map').setView([42.132890957140546,65.28135555060638],6);
 
@@ -80,108 +102,11 @@
     }
 
     L.control.layers(baseMaps).addTo(map);
-
-    var geojsonFeature = {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-            "coordinates": [
-                [
-                    62.036296883179006,
-                    43.508250828520914
-                ],
-                [
-                    62.43407721033043,
-                    43.529617432137684
-                ],
-                [
-                    63.288568283472074,
-                    43.65765814775534
-                ],
-                [
-                    64.51874077670172,
-                    43.566990781441916
-                ],
-                [
-                    64.93125370856325,
-                    43.73222274859032
-                ],
-                [
-                    65.17434168626676,
-                    43.502907995387375
-                ],
-                [
-                    65.52792419929119,
-                    43.29952997408037
-                ],
-                [
-                    65.83730889818696,
-                    42.863735909326266
-                ],
-                [
-                    66.08776317824558,
-                    42.928493569891316
-                ],
-                [
-                    66.10249578295571,
-                    42.34867206863612
-                ],
-                [
-                    65.99200124763479,
-                    42.35411596576182
-                ],
-                [
-                    65.99936754998987,
-                    41.939036610593604
-                ],
-                [
-                    66.52974131952564,
-                    41.87873394759481
-                ],
-                [
-                    66.69916627368369,
-                    41.139568987033385
-                ],
-                [
-                    62.60350216448842,
-                    41.466062053900714
-                ],
-                [
-                    62.19835553498194,
-                    41.3832103253533
-                ],
-                [
-                    61.69008067250965,
-                    41.9171149604212
-                ],
-                [
-                    61.99946537140542,
-                    42.004756359125594
-                ],
-                [
-                    61.8595056266677,
-                    42.25060130160074
-                ],
-                [
-                    61.94053495256824,
-                    42.56063459284934
-                ],
-                [
-                    62.47827502445912,
-                    43.229796570221765
-                ],
-                [
-                    62.22045444204545,
-                    43.27808205009006
-                ],
-                [
-                    62.036296883179006,
-                    43.51359318876678
-                ]
-            ],
-            "type": "LineString"
-        }
-    };
+    @if(!empty($location))
+        var geojsonFeature = {!!$location->geometry!!};
+    @else
+    var geojsonFeature;
+    @endif
     var myStyle = {
         "color": "#2a7afa",
         "fill": "#659ffc",

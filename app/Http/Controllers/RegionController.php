@@ -9,13 +9,20 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
-    public function map_view(): Factory|Application|View
+    public function map_view(Request $request): Factory|Application|View
     {
+        $region_id = $request->region_id;
         $regions = Region::all();
-        $districts = District::all();
+        if ($region_id !== null){
+            $districts = District::query()->where('region_id',$region_id)->get();
+        }else{
+            $districts = null;
+        }
+
         return view('welcome',compact('regions','districts'));
     }
 
