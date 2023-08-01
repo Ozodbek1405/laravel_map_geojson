@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('districts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->json('geometry');
-            $table->string('cad_raqami');
-            $table->string('viloyat');
-            $table->integer('region_id');
+            $table->string('name')->nullable();
+            $table->string('type')->nullable();
+            $table->json('geometry')->nullable();
+            $table->string('cad_raqami')->nullable();
+            $table->string('viloyat')->nullable();
+            $table->integer('region_id')->nullable();
+            $table->string('setView')->nullable();
+            $table->integer('zoom')->nullable();
             $table->timestamps();
         });
     }

@@ -60,7 +60,14 @@ if (!empty($_GET['region_id'])){
     })
 </script>
 <script>
-    var map = L.map('map').setView([42.132890957140546,65.28135555060638],6);
+    @if(!empty($_GET['region_id']))
+        var setView = [{!!$location->setView!!}];
+        var zoom = {{$location->zoom}};
+    @else
+        var setView = [42.132890957140546,65.28135555060638];
+        var zoom = 6;
+    @endif
+    var map = L.map('map').setView(setView,zoom);
 
     var Google_Map = L.tileLayer('http://www.google.uz/maps/vt?ROADMAP=s@189&gl=ru&x={x}&y={y}&z={z}', {
         maxZoom: 18,

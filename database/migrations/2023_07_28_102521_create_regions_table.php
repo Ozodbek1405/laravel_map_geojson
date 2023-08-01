@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('type');
-            $table->json('geometry');
-            $table->integer('cadastr_num');
-            $table->integer('region_id');
+            $table->string('name')->nullable();
+            $table->string('type')->nullable();
+            $table->json('geometry')->nullable();
+            $table->integer('cadastr_num')->nullable();
+            $table->integer('region_id')->nullable();
+            $table->string('setView')->nullable();
+            $table->integer('zoom')->nullable();
             $table->timestamps();
         });
     }

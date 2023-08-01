@@ -38,6 +38,7 @@ class RegionController extends Controller
 
         foreach ($data->features as $item) {
             Region::query()->create([
+                'id'=>$item->properties->cadastr_num,
                 'name'=> $item->properties->name,
                 'type'=> $item->type,
                 'geometry'=> json_encode($item->geometry),
