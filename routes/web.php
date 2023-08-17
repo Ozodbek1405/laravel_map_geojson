@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/',[RegionController::class,'map_view']);
+Route::get('/chart-js',[RegionController::class,'chart_view']);
+Route::get('/chart-pie',[RegionController::class,'chart_pie']);
 Route::get('/create-view',[RegionController::class,'create_view']);
 Route::post('/create-region',[RegionController::class,'create_region'])->name('create.region');
 Route::post('/create-district',[RegionController::class,'create_district'])->name('create.district');

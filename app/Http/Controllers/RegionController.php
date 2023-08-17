@@ -67,4 +67,14 @@ class RegionController extends Controller
         }
         return redirect()->back();
     }
+
+    public function chart_view(): Factory|Application|View
+    {
+        return view('chart_view');
+    }
+
+    public function chart_pie(): Factory|Application|View
+    {
+        return view('chart_pie');
+    }
 }
